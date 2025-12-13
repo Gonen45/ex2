@@ -1,5 +1,8 @@
 package assignments.Ex2;
 import java.io.Serializable;
+
+import static jdk.internal.org.jline.utils.Colors.h;
+
 /**
  * This class represents a 2D map (int[w][h]) as a "screen" or a raster matrix or maze over integers.
  * This is the main class needed to be implemented.
@@ -32,10 +35,32 @@ public class Map implements Map2D, Serializable{
 	}
 	@Override
 	public void init(int w, int h, int v) {
+        int[][] map = new int[h][w];
+        for (int i=0; i<h; i++){
+            for(int j=0; j<w; j++){
+                map[i][j]=v;
+            }
+        }
 
 	}
 	@Override
 	public void init(int[][] arr) {
+        if ((arr== null)||(arr.length == 0)) {throw new RuntimeException("array cannot be null or with h=0 ");}
+        int h= arr.length;
+        int w;
+        if (arr[0].length>0 ){
+         w=arr[0].length;}
+        else {throw new RuntimeException("w most be larger then 0");}
+
+        int[][] map = new int[h][w];
+        for (int i=0; i<h; i++){
+            if (arr[i].length != w) {
+                throw new RuntimeException("Array must have same length");
+            }
+            for(int j=0; j<w; j++){
+                map[i][j] = arr[i][j];
+            }
+        }
 
 	}
 	@Override
@@ -47,6 +72,7 @@ public class Map implements Map2D, Serializable{
 	@Override
 	public int getWidth() {
         int ans = -1;
+
 
         return ans;
     }
