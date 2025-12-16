@@ -91,22 +91,23 @@ public class Map implements Map2D, Serializable{
     }
 	@Override
 	public int getPixel(int x, int y) {
-        if(dimFit(y,x)){
+        Index2D p = new Index2D(x, y);
+        if(isInside(p)){
         int ans =_map[y][x];
         return ans;}
         else{throw new RuntimeException("x or y out of dim"); }
     }
 	@Override
 	public int getPixel(Pixel2D p) {
-        int x=p.getX(),y=p.getY();
-        if(dimFit(y,x)){
-        int ans =_map[y][x];
+        if(isInside(p)){
+        int ans =_map[p.getY()][p.getX()];
         return ans;}
         else{throw new RuntimeException("x or y out of dim"); }
 	}
 	@Override
 	public void setPixel(int x, int y, int v) {
-        if(dimFit(y,x)){
+        Index2D p = new Index2D(x, y);
+        if(isInside(p)){
             _map[y][x]=v;
         }
         else{throw new RuntimeException("x or y out of dim"); }
@@ -114,13 +115,15 @@ public class Map implements Map2D, Serializable{
     }
 	@Override
 	public void setPixel(Pixel2D p, int v) {
-
-	}
+        int x=p.getX(),y=p.getY();
+        if(isInside(p)){
+            _map[y][x]=v;}
+        else{throw new RuntimeException("x or y out of dim"); }
+    }
 
     @Override
     public boolean isInside(Pixel2D p) {
-        boolean ans = true;
-
+        boolean ans =  (p.getY() < this.getHeight()) && (p.getX() < this.getWidth());
         return ans;
     }
 
@@ -196,7 +199,7 @@ public class Map implements Map2D, Serializable{
     }
 	////////////////////// Private Methods ///////////////////////
     private boolean dimFit(int row, int col) {
-        boolean ans = (row == _map.length) && (col == _map[0].length);
+        boolean ans = (row <= _map.length) && (col <= _map[0].length);
         return ans;
     }
 
