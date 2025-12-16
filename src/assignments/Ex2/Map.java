@@ -105,7 +105,7 @@ public class Map implements Map2D, Serializable{
         else{throw new RuntimeException("x or y out of dim"); }
 	}
 	@Override
-	public void setPixel(int x, int y, int v) {
+	public void setPixel(int x, int y, int v) {//row-y  col-x
         Index2D p = new Index2D(x, y);
         if(isInside(p)){
             _map[y][x]=v;
@@ -129,19 +129,29 @@ public class Map implements Map2D, Serializable{
 
     @Override
     public boolean sameDimensions(Map2D p) {
-        boolean ans = false;
-
+        boolean ans = ((p.getHeight() == this.getHeight()) && (p.getWidth() == this.getWidth()));
         return ans;
     }
 
     @Override
     public void addMap2D(Map2D p) {
+        if(this.sameDimensions(p)){
+            for(int r=0;r<p.getHeight();r++){
+                for(int c=0; c<p.getWidth();c++){
+                    this.setPixel(r,c,(this.getPixel(r,c)+p.getPixel(r,c)));
+                }
+            }
+        }
 
     }
 
     @Override
     public void mul(double scalar) {
-
+        for(int r=0;r<this.getHeight();r++) {
+            for (int c = 0; c < this.getWidth(); c++) {
+                this.setPixel(r, c, (int) (this.getPixel(r, c) * scalar));
+            }
+        }
     }
 
     @Override
