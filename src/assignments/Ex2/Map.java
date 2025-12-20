@@ -173,9 +173,10 @@ public class Map implements Map2D, Serializable{
     public void drawCircle(Pixel2D center, double rad, int color) {
         for(int r=0; r<this.getHeight();r++){
             for(int c=0; c<this.getWidth();c++){
-                Index2D point= new Index2D(c,r);//Can be improved
+                Index2D point= new Index2D(c,r);//Can be improve
                 if (CircleContains(point,center,rad)){
                     this.setPixel(point,color);
+
                 }
             }
         }
