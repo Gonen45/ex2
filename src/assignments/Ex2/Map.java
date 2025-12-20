@@ -1,4 +1,6 @@
 package assignments.Ex2;
+import classes.week6.Point2D;
+
 import java.io.Serializable;
 
 import static jdk.internal.org.jline.utils.Colors.h;
@@ -50,7 +52,7 @@ public class Map implements Map2D, Serializable{
 	public void init(int[][] arr) {
         if ((arr== null)||(arr.length == 0)) {throw new RuntimeException("array cannot be null or with h=0 ");}
         int h= arr.length;
-        int w; //is that needed?
+        int w;
         if (arr[0].length>0 ){
          w=arr[0].length;}
         else {throw new RuntimeException("w most be larger then 0");}
@@ -76,7 +78,6 @@ public class Map implements Map2D, Serializable{
                 ans[r][c]=_map[r][c];
             }
         }
-
 		return ans;
 	}
 	@Override
@@ -156,11 +157,30 @@ public class Map implements Map2D, Serializable{
 
     @Override
     public void rescale(double sx, double sy) {
+        int new_h= (int) (this.getHeight()* sy), new_w= (int) (this.getWidth()* sx);
+        int[][] re_map= new int[new_h][new_w];
+        for (int r=0; r<new_h; r++){
+            for(int c=0; c < new_w ; c++){
+                int old_w= (int)(c/sx),old_h= (int)(r/sy);
+                re_map[r][c]=this.getPixel(old_w,old_h);
+            }
+        }
+       this.init(re_map);
 
     }
 
     @Override
     public void drawCircle(Pixel2D center, double rad, int color) {
+        for(int r=0; r<this.getHeight();r++){
+            for(int c=0; c<this.getWidth();c++){
+                Index2D point= new Index2D(c,r);//Can be improved
+                if (CircleContains(point,center,rad)){
+                    this.setPixel(point,color);
+                }
+            }
+        }
+
+
 
     }
 
@@ -207,12 +227,13 @@ public class Map implements Map2D, Serializable{
 
         return ans;
     }
-	////////////////////// Private Methods ///////////////////////
-    private boolean dimFit(int row, int col) {
-        boolean ans = (row <= _map.length) && (col <= _map[0].length);
-        return ans;
+    ////////////////////// Private Methods ///////////////////////
+    private boolean CircleContains(Pixel2D p,Pixel2D center, double r) {
+        return r >= p.distance2D(center);
     }
 
-    }
+
+
+}
 
 

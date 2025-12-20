@@ -37,9 +37,83 @@ class MapTest {
     }
     @Test
     void testEquals() {
-        assertEquals(_m0,_m1);
+        assertEquals(_m0, _m1);
         _m0.init(_map_3_3);
         _m1.init(_map_3_3);
-        assertEquals(_m0,_m1);
+        assertEquals(_m0, _m1);
     }
-}
+
+
+        @Test
+        void getMap() {
+        }
+
+        @Test
+        void getWidth() {
+        }
+
+        @Test
+        void getHeight() {
+        }
+
+        @Test
+        void getPixel() {
+        }
+
+        @Test
+        void testGetPixel() {
+        }
+
+        @Test
+        void setPixel() {
+        }
+
+        @Test
+        void testSetPixel() {
+        }
+
+        @Test
+        void isInside() {
+        }
+
+        @Test
+        void sameDimensions() {
+        }
+
+        @Test
+        void addMap2D() {
+        }
+
+        @Test
+        void mul() {
+        }
+
+        @Test
+        void rescale() {
+        }
+
+        @Test
+        void drawCircle() {
+        }
+
+        @Test
+        void drawLine() {
+        }
+
+        @Test
+        void drawRect() {
+        }
+
+
+        @Test
+        void fill() {
+        }
+
+        @Test
+        void shortestPath() {
+        }
+
+        @Test
+        void allDistance() {
+        }
+    }
