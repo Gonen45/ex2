@@ -227,7 +227,12 @@ public class Map implements Map2D, Serializable{
 
     @Override
     public void drawRect(Pixel2D p1, Pixel2D p2, int color) {
-
+        int x_start=Math.min(p1.getX(),p2.getX()), x_end=Math.max(p1.getX(),p2.getX());
+        int y_start=Math.min(p1.getY(),p2.getY()), y_end=Math.max(p1.getY(),p2.getY());
+        for(int r=y_start; r<=y_end;r++){
+            Index2D p_start= new Index2D(x_start,r), p_end= new Index2D(x_end, r);
+            drawLine(p_start,p_end,color);
+        }
     }
 
     @Override
