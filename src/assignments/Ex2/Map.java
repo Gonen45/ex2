@@ -171,23 +171,58 @@ public class Map implements Map2D, Serializable{
 
     @Override
     public void drawCircle(Pixel2D center, double rad, int color) {
-        for(int r=0; r<this.getHeight();r++){
-            for(int c=0; c<this.getWidth();c++){
-                Index2D point= new Index2D(c,r);//Can be improve
+        for(int r=(int) (center.getY()-rad); r<(int) (center.getY()+rad);r++){
+            for(int c=(int) (center.getX()-rad); c<(int) (center.getX()+rad);c++){
+                Index2D point= new Index2D(c,r);//Can be improved
                 if (CircleContains(point,center,rad)){
                     this.setPixel(point,color);
-
-                }
+               }
             }
         }
-
-
-
     }
 
     @Override
     public void drawLine(Pixel2D p1, Pixel2D p2, int color) {
+        if (!isInside(p1) || !isInside(p2)) return;
+        if (p1.equals(p2)) {
+            setPixel(p1.getX(), p1.getY(), color);
+            return;
+        }
+        int x1 = p1.getX(), y1 = p1.getY(), x2 = p2.getX(), y2 = p2.getY();
+        int dx = Math.abs(x2 - x1), dy = Math.abs(y2 - y1);
 
+        if (dx >= dy) {
+            if (x1 > x2) {
+                drawLine(p2, p1, color);
+                return;
+            }
+
+            double slope = (double)(y2 - y1) / (x2 - x1),y = y1;
+
+            for (int x = x1; x <= x2; x++) {
+                int ry = (int)Math.round(y);
+                if (this.isInside(new Index2D(x, ry))) {
+                    setPixel(x, ry, color);
+                }
+                y += slope;
+            }
+        }
+        else {
+            if (y1 > y2) {
+                drawLine(p2, p1, color);
+                return;
+            }
+
+            double slope = (double)(x2 - x1) / (y2 - y1), x = x1;
+
+            for (int y = y1; y <= y2; y++) {
+                int rx = (int)Math.round(x);
+                if (this.isInside(new Index2D(rx, y))) {
+                    setPixel(rx, y, color);
+                }
+                x += slope;
+            }
+        }
     }
 
     @Override
