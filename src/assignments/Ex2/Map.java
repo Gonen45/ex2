@@ -1,6 +1,9 @@
 package assignments.Ex2;
 
 import java.io.Serializable;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This class represents a 2D map (int[w][h]) as a "screen" or a raster matrix or maze over integers.
@@ -308,8 +311,67 @@ public class Map implements Map2D, Serializable {
      * https://en.wikipedia.org/wiki/Breadth-first_search
      */
     public Pixel2D[] shortestPath(Pixel2D p1, Pixel2D p2, int obsColor, boolean cyclic) {
-        Pixel2D[] ans = null;  // the result.
+        Pixel2D[] ans = null;// the result.
+        if(!(this.isInside(p1)) || !(this.isInside(p2))){
+            throw new RuntimeException("p1 or p2 out of bounds");
+        }
+        if(p1.equals(p2)){return new Pixel2D[] {p1};}
+        int r=this.getHeight(), c=this.getWidth();
+        int  ex= p2.getX(),ey= p2.getY();
+        Pixel2D[][] parents= new Pixel2D[r][c];
+        boolean[][] visited= new boolean[r][c];
+        int[][] dirct={{1,0},{-1,0},{0,1},{0,-1}};
+        ArrayDeque<Index2D> q = new ArrayDeque<>();
+        boolean found=false;
+        q.add(new Index2D(p1));
+        visited[p1.getY()][p1.getX()]=true;
+        parents[p1.getY()][p1.getX()]=null;//start point don't have someone before it.
 
+        while(!q.isEmpty())
+        {
+            Index2D curr= q.removeFirst();
+//            int curr_x= curr.getX(), curr_y=curr.getY();
+            if(curr.equals(p2))
+            {
+             found=true;
+             break;
+            }
+
+            for(int[] d: dirct){
+                int nx=curr.getX()+d[0],ny=curr.getY()+d[1];
+                Index2D n_curr= new Index2D(nx,ny);
+                if(cyclic){
+                    if(nx==c){nx=0;} else if (nx==-1) {nx=c-1;}
+                    if(ny==r){ny=0;} else if (ny==-1) {ny=r-1;}
+                    n_curr.change(nx,ny);
+                }
+                else
+                {
+                    if((nx<0) || (nx>=c) || (ny<0) || (ny>=r))
+                    {
+                        continue;
+                    }
+                }
+                if(!visited[ny][nx] && this.getPixel(n_curr)!=obsColor){
+                    visited[ny][nx]=true;
+                    parents[ny][nx]=curr;
+                    q.add(n_curr);
+                }
+
+            }
+
+        }
+        if(!found){return null;}//didn't find a path.
+
+        ArrayList<Index2D> paths= new ArrayList<>();
+        Index2D current= new Index2D(p2);
+        while(!current.equals(p1)){
+            paths.add(current);
+            current= new Index2D(parents[current.getY()][current.getX()]);
+        }
+        paths.add((Index2D) p1);
+        Collections.reverse(paths);
+        ans= paths.toArray(new Pixel2D[0]);
         return ans;
     }
 
@@ -347,7 +409,12 @@ public class Map implements Map2D, Serializable {
         filler(new Index2D(x + 1, y), old_color, new_v, cyclic);
         filler(new Index2D(x - 1, y), old_color, new_v, cyclic);
     }
+
+
+
+
 }
+
 
 
 

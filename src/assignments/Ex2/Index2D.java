@@ -7,6 +7,7 @@ public class Index2D implements Pixel2D {
     private int _h;
     private int _w;
 
+
     public Index2D(int w, int h) {
         _h=Math.abs(h); //abs is needed???
         _w=Math.abs(w);
@@ -40,5 +41,10 @@ public class Index2D implements Pixel2D {
         if(p==null || !(p instanceof Index2D)) {return false;}
         Index2D p2 = (Index2D)p;
         return (((this._h==p2.getY()) && (this._w==p2.getX())));
+    }
+
+    public void change(int w ,int h) {
+        this._h = h;
+        this._w = w;
     }
 }
