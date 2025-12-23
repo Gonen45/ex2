@@ -154,8 +154,9 @@ public class Map implements Map2D, Serializable {
 
     @Override
     public boolean isInside(Pixel2D p) {
-        boolean ans = (p.getY() < this.getHeight()) && (p.getX() < this.getWidth());
-        return ans;
+        boolean c1 = ((p.getY() < this.getHeight()) && (p.getX() < this.getWidth()));
+        boolean c2=  (0<=p.getY()) && (0<=p.getX());
+        return c1 && c2;
     }
 
     @Override
@@ -297,11 +298,45 @@ public class Map implements Map2D, Serializable {
      */
     public int fill(Pixel2D xy, int new_v, boolean cyclic) {
         this.counter = 0;
+        if(!(this.isInside(xy))) {throw new RuntimeException("xy out of bounds");}
         int color = this.getPixel(xy);
+        if(color==new_v){return 0;}
+        int r=this.getHeight(), c=this.getWidth();
 
-        if (color != new_v && isInside(xy)) {
-            filler(xy, color, new_v, cyclic);
+        int[][] dirct={{1,0},{-1,0},{0,1},{0,-1}};
+        ArrayDeque<Index2D> q = new ArrayDeque<>();
+        q.add((Index2D) xy);
+
+        while(!q.isEmpty())
+        {
+            Index2D curr= q.removeFirst();
+//            this.setPixel(curr,new_v);
+//            counter++;
+            for(int[] d: dirct){
+                int nx=curr.getX()+d[0],ny=curr.getY()+d[1];
+                Index2D n_curr= new Index2D(nx,ny);
+                if(cyclic){
+                    if(nx==c){nx=0;} else if (nx==-1) {nx=c-1;}
+                    if(ny==r){ny=0;} else if (ny==-1) {ny=r-1;}
+                    n_curr.change(nx,ny);
+                }
+                else {
+                    if (!this.isInside(n_curr)) {
+                        continue;
+                    }
+                }
+                if (this.getPixel(n_curr) == color)
+                {
+                    this.setPixel(n_curr,new_v);
+                    q.add(n_curr);
+                    counter++;
+                }
+            }
         }
+
+
+
+
         return this.counter;
     }
 
@@ -330,7 +365,6 @@ public class Map implements Map2D, Serializable {
         while(!q.isEmpty())
         {
             Index2D curr= q.removeFirst();
-//            int curr_x= curr.getX(), curr_y=curr.getY();
             if(curr.equals(p2))
             {
              found=true;
@@ -357,9 +391,7 @@ public class Map implements Map2D, Serializable {
                     parents[ny][nx]=curr;
                     q.add(n_curr);
                 }
-
             }
-
         }
         if(!found){return null;}//didn't find a path.
 
@@ -377,14 +409,61 @@ public class Map implements Map2D, Serializable {
 
     @Override
     public Map2D allDistance(Pixel2D start, int obsColor, boolean cyclic) {
-        Map2D ans = null;  // the result.
+        Map ans =  new Map(this.getMap());
+        ans.paddMap2D(obsColor);
+        if(!(this.isInside(start))) {throw new RuntimeException("start point out of bounds");}
+        int r=ans.getHeight(), c=ans.getWidth();
+        int[][] dirct={{1,0},{-1,0},{0,1},{0,-1}};
+        ArrayDeque<Index2D> q = new ArrayDeque<>();
+        q.add((Index2D) start);
+        ans.setPixel(start,0);
 
+        while(!q.isEmpty())
+        {
+            Index2D curr= q.removeFirst();
+            int curr_color=ans.getPixel(curr);
+
+            for(int[] d: dirct){
+                int nx=curr.getX()+d[0],ny=curr.getY()+d[1];
+                Index2D n_curr= new Index2D(nx,ny);
+                if(cyclic)
+                {
+                    if(nx==c){nx=0;} else if (nx==-1) {nx=c-1;}
+                    if(ny==r){ny=0;} else if (ny==-1) {ny=r-1;}
+                    n_curr.change(nx,ny);
+                }
+                else {
+                    if (!ans.isInside(n_curr)) {
+                        continue;
+                    }
+                }
+                if (ans.getPixel(n_curr) == -1)
+                {
+                    q.add(n_curr);
+                    ans.setPixel(n_curr,curr_color+1);
+                }
+            }
+
+        }
         return ans;
     }
 
     /// /////////////////// Private Methods ///////////////////////
+    ///
     private boolean CircleContains(Pixel2D p, Pixel2D center, double r) {
         return r >= p.distance2D(center);
+    }
+
+
+//    old version
+    private int fill_in_rec(Pixel2D xy, int new_v, boolean cyclic) {
+        this.counter = 0;
+        int color = this.getPixel(xy);
+
+        if (color != new_v && isInside(xy)) {
+            filler(xy, color, new_v, cyclic);
+        }
+        return this.counter;
     }
 
     private void filler(Pixel2D p, int old_color, int new_v, boolean cyclic) {
@@ -409,7 +488,50 @@ public class Map implements Map2D, Serializable {
         filler(new Index2D(x + 1, y), old_color, new_v, cyclic);
         filler(new Index2D(x - 1, y), old_color, new_v, cyclic);
     }
+    private int neighbors_min_color(Map2D map,Index2D curr, boolean cyclic){
+        int v=0;
+        int r=map.getHeight(), c=map.getWidth();
+        ArrayList<Integer> list= new ArrayList<>();
+        int[][] dirct={{1,0},{-1,0},{0,1},{0,-1}};
+        for(int[] d: dirct)
+        {
+            int nx=curr.getX()+d[0],ny=curr.getY()+d[1];
+            Index2D n_curr= new Index2D(nx,ny);
+            if(cyclic){
+                if(nx==c){nx=0;} else if (nx==-1) {nx=c-1;}
+                if(ny==r){ny=0;} else if (ny==-1) {ny=r-1;}
+                n_curr.change(nx,ny);
+            }
+            else {
+                if ((nx < 0) || (nx >= c) || (ny < 0) || (ny >= r)) {
+                    continue;
+                }
+            }if(map.getPixel(n_curr)>=0)
+                {
+                    list.add(map.getPixel(n_curr));
+                }
+            }
 
+        if(!list.isEmpty())
+        {
+            v=Collections.min(list);
+        }
+
+        return v+1;
+    }
+
+    private void paddMap2D(int v) {
+            for (int r = 0; r < this.getHeight(); r++) {
+                for (int c = 0; c < this.getWidth(); c++) {
+                    if(this.getPixel(c, r)!=v)
+                    {
+                        this.setPixel(c, r,-1);
+                    }
+                }
+            }
+
+
+    }
 
 
 

@@ -9,8 +9,8 @@ public class Index2D implements Pixel2D {
 
 
     public Index2D(int w, int h) {
-        _h=Math.abs(h); //abs is needed???
-        _w=Math.abs(w);
+        _h=h;
+        _w=w;
     }
     public Index2D(Pixel2D other) {
 //        copy constructor
@@ -39,7 +39,7 @@ public class Index2D implements Pixel2D {
     @Override
     public boolean equals(Object p) {
         if(p==null || !(p instanceof Index2D)) {return false;}
-        Index2D p2 = (Index2D)p;
+        Index2D p2 = (Index2D) p;
         return (((this._h==p2.getY()) && (this._w==p2.getX())));
     }
 
