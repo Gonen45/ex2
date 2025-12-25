@@ -67,6 +67,7 @@ class MapTest {
 
         @Test
         void getHeight() {
+            _m0=new Map(9);
             int h=_m0.getHeight();
             assertEquals(9, h);
         }
@@ -80,7 +81,13 @@ class MapTest {
         }
 
         @Test
-        void testGetPixel() {//TODO
+        void testGetPixel() {
+            _m0 =new Map(9,4,1);
+            _m0.setPixel(p,8);
+            int i= _m0.getPixel(p);
+            assertEquals(8, i);
+
+
         }
 
         @Test
@@ -93,7 +100,12 @@ class MapTest {
         }
 
         @Test
-        void testSetPixel() {//TODO
+        void testSetPixel() {
+            _m0 =new Map(5);
+            _m0.setPixel(p,8);
+            int i= _m0.getPixel(p);
+            assertEquals(8, i);
+
         }
 
         @Test
@@ -161,6 +173,12 @@ class MapTest {
 
         @Test
         void drawCircle() {
+            _m0=new Map(5);
+            p.change(2,2);
+            _m0.drawCircle(p,8,7);
+
+            _m1= new Map(5,5,7);
+            assertEquals(_m1,_m0);
         }
 
         @Test
@@ -214,6 +232,21 @@ class MapTest {
 
         @Test
         void shortestPath() {
+            _m0=new Map(10);
+            Index2D p1= new Index2D(_m0.getWidth()-1,0),p2= new Index2D(0,0);
+            Pixel2D[] path= _m0.shortestPath(p1,p2,7,false);
+            for (Pixel2D p : path)
+            {
+                Index2D po= new Index2D(p);
+                _m0.setPixel(po.getX(), po.getY(),3);
+
+            }
+
+            _m1=new Map(10);
+            _m1.drawLine(p2,p1,3);
+
+            assertEquals(_m1,_m0);
+
         }
 
         @Test

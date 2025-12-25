@@ -38,6 +38,8 @@ public class Ex2_GUI {
                 else if (v==5) {StdDraw.setPenColor(StdDraw.GREEN);}
                 else if (v==6) {StdDraw.setPenColor(StdDraw.YELLOW);}
                 else if (v==7) {StdDraw.setPenColor(StdDraw.ORANGE);}
+                else if (v==8) {StdDraw.setPenColor(StdDraw.BOOK_BLUE);}
+                else if (v==9) {StdDraw.setPenColor(StdDraw.LIGHT_GRAY);}
                 else{StdDraw.setPenColor(StdDraw.BLACK);}
 
 //                StdDraw.filledSquare(c,r,0.5);
@@ -97,8 +99,13 @@ public class Ex2_GUI {
     }
         public static void main(String[] a) throws FileNotFoundException {
         String mapFile = "map.txt";
-        Map2D map = new Map(10,10,3);
-        map =  maze2((Map) map);
+        Map2D map = new Map(50,50,3);
+        map.drawCircle(new Index2D(25,25),20,6);
+        map= maze2((Map)map);
+        map.drawLine(new Index2D(25,1),new Index2D(25,49),3);
+        map.setPixel(25,24,7);
+        Index2D p1= new Index2D(map.getWidth()-1,0),p2= new Index2D(0,map.getHeight()-1);
+        map= s_p((Map)map,p1,p2,9);
         saveMap(map,mapFile);
         map = loadMap(mapFile);
         drawMap(map);
@@ -154,6 +161,17 @@ public class Ex2_GUI {
             rightGap = !rightGap;
         }
 
+        return map;
+    }
+
+    public static Map2D s_p(Map map,Index2D p1,Index2D p2,int new_v) {
+        Pixel2D[] path= map.shortestPath(p1,p2,7,false);
+        for (Pixel2D p : path)
+        {
+                Index2D po= new Index2D(p);
+                map.setPixel(po.getX(), po.getY(), new_v);
+
+         }
         return map;
     }
 }
