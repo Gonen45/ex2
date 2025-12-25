@@ -101,6 +101,7 @@ public class Ex2_GUI {
         Map2D map = new Map(50,50,3);
 //        map= maze((Map)map);
 
+
 //        senrio 2:
         map.drawCircle(new Index2D(25,25),20,4);
         map= maze2((Map)map);
