@@ -206,8 +206,8 @@ public class Map implements Map2D, Serializable {
         if (rad <= 0) {
             throw new IllegalArgumentException("rad must be bigger than 0");
         }
-        for (int r = (int) (center.getY() - rad); r < (int) (center.getY() + rad); r++) {
-            for (int c = (int) (center.getX() - rad); c < (int) (center.getX() + rad); c++) {
+        for (int r = (int) (center.getY() - rad); r <= (int) (center.getY() + rad); r++) {
+            for (int c = (int) (center.getX() - rad); c <= (int) (center.getX() + rad); c++) {
                 Index2D point = new Index2D(c, r);
                 if (CircleContains(point, center, rad)) {
                     if (this.isInside(point)) {
