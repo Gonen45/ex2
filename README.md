@@ -1,38 +1,54 @@
-# Intro2CS_ArielU_2026A
-This is an educational repository for teaching Introduction to Computer Science in Java (Ariel University, 2026 - fall semester - A). This repository contains the documents and code examples for the CS-101 course. This course requires no background in programming. The course covers basic concepts of programming, algorithms, and object-oriented programming using Java. At the end of the course, students should gain good programming skills and theoretical understanding, in particular sorting, functions, recursion, text files, classes, and interfaces.
+# Ex02 - Maze soloving with OOP 
 
-Links:
+This project is an assignment from the Java programing course *Introduction to Computer Science* in Arial University.  
+The goal is to implement various the Map2D and Pixel2D interfaces for Maze soloving algorithms based on BFS eproch.
+and presntition of them on GUI implention from StdDraw.
 
-General Code standards in Java (based on Google's Style Guide): https://google.github.io/styleguide/javaguide.html#s2.1-file-name
-Moodle link (Hebrew, requires authentication):
-IDE: https://www.jetbrains.com/idea/
-Java version: 25, or 21 (LTS): https://www.oracle.com/il-en/java/technologies/downloads/#java25
-Github (self ref): https://github.com/benmoshe/Intro2CS_ArielU_2026A
-Classes:
 
-Class 1: Introduction: https://docs.google.com/presentation/d/1HCnjbvDFhup6xFeKgNt-hShfN2C_TbqY/
+The project demonstrates my understanding of:
+- getters and setters
+- Mathods creation
+- BFS algorithm
+- working with files
+  
 
-Class 2: Foundation for programming: https://docs.google.com/presentation/d/1cNENnPcj9hI5sr5sW8hpV4KGrLCVNPu-/
+##  Implemented Mathods
 
-Class 3: Arrays and Functions: https://docs.google.com/presentation/d/1d-TIHR4G2r4V4sD3-bsBsd0wszVdiNvP/
+### 1. getters and setters
+varius getters and setters for change and gain specific maps and pixels.
 
-Class 4: JUnit for Functions: https://docs.google.com/presentation/d/1q6YxvLr1BdcuBs5wczdXHF8pOfMHVxTf/
+### 2. drawing Mathods
+I made three drawing Mathods: drawLine, drawCircle and drawRect.
+for drawing shapes over the map I working on.
 
-Class 5: Sorting and Searching: https://docs.google.com/presentation/d/1T4CX3oDuZZO48r1HwGkES83Y7DGKqqkc/
+<img width="350" height="500" alt="Screenshot 2025-12-25 212115" src="https://github.com/user-attachments/assets/58086ad8-ad54-47c2-9dde-cbdf034ec551" />
 
-Class 6: Intro to OOP: https://docs.google.com/presentation/d/10SVM6RtvpKhahSU3p3Xq8lOpGUZEfr6W/edit?usp=sharing&ouid=113711744349547563645&rtpof=true&sd=true
 
-Class 7: OOP: collections: https://docs.google.com/presentation/d/1o-ng4-zNNAAiVROylgSxWMTAZ5WKCkUY/edit?usp=sharing&rtpof=true&sd=true
+### 3. fill Mathod
+I implented the flood fill algohritm for abalen the user to color
+each cluster of pixels in the same color.
+I based it on BFS logic I took each pixel neighboors that is from the same cluster and add it to the queue for checking is neigboors and coloring him.
+this mathod has an older version in the botoom of Map has a comment, the older version works with recurcion.
 
-Class 8: Interfaces, Text files & Exceptions: https://docs.google.com/presentation/d/1xt_oeEb-sxf9Um_HnW7-hvP8rOMWD8bz/edit?usp=sharing&ouid=113711744349547563645&rtpof=true&sd=true
+### 4. shortestPath
+The shortestPath method finds the shortest distance from point A to point B while avoiding obstacles. It uses the BFS algorithm.
+It explores the grid layer by layer using a queue, marking visited nodes and recording the "parent" of each neighbor.
+It handles cyclic boundaries if the cyclic flag is true.
+Once the destination is reached, the method reconstructs the path by backtracking from the destination to the start using the parent references.
+Finally, the list is reversed to return the path in the correct order.
 
-Class 9: Recursion: https://docs.google.com/presentation/d/1bcKU1Puh1OOWaESAZ6EX4qD1KyDh8ZcA/edit?usp=sharing&ouid=113711744349547563645&rtpof=true&sd=true
+<img width="350" height="500" alt="image" src="https://github.com/user-attachments/assets/3b912d88-25f9-4656-92af-4fac41507075" />
 
-Class 10: https://docs.google.com/presentation/d/1GVmEJaWNd56YsrXiZhWyUcuLnMlEVpmC/edit?usp=sharing&ouid=113711744349547563645&rtpof=true&sd=true
 
-Class 11: https://docs.google.com/presentation/d/1N20U_zfZhr4uRqgwVZv_DogYGNmek-1E/edit?usp=sharing&ouid=113711744349547563645&rtpof=true&sd=true
 
-Assignments:
-Ex0: https://docs.google.com/document/d/1UtngN203ttQKf5ackCnXs4UnbAROZWHr/edit?usp=sharing&ouid=113711744349547563645&rtpof=true&sd=true
-Ex1: https://docs.google.com/document/d/1GcNQht9rsVVSt153Y8pFPqXJVju56CY4/edit?usp=sharing&ouid=113711744349547563645&rtpof=true&sd=true
+### 5.allDistance
+The allDistance method creates a new map where every pixel stores the distance from the start point to itself. This is effectively a "flood fill" that maps out how far every point is from the start.
+It creates a copy of the map and initializes it. The private method paddMap2D resets all valid (non-obstacle) pixels to a value of -1 to mark them as "unvisited".
+It processes pixels one by one.
+For every neighbor, it checks if it is inside the bounds (handling cyclic wrapping if needed).
+If a neighbor has a value of -1 (meaning it hasn't been visited yet), its value is updated to current_distance + 1.
+It returns a Map2D object containing these distance values.
 
+
+
+link for the assigment guide: https://docs.google.com/document/d/1BtSldHciAGqjccYC3d7BKvWqIljfxKeJ/edit?usp=sharing&ouid=114201356376601981370&rtpof=true&sd=true
