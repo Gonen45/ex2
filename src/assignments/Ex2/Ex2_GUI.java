@@ -1,7 +1,6 @@
 package assignments.Ex2;
 
 
-import classes.week6.Point2D;
 
 import java.io.File;
 import java.io.FileNotFoundException;

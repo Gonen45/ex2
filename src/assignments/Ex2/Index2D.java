@@ -1,6 +1,6 @@
 package assignments.Ex2;
 
-import classes.week6.Point2D;
+//import classes.week6.Point2D;
 
 public class Index2D implements Pixel2D {
 
