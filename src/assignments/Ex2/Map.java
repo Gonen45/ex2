@@ -166,7 +166,7 @@ public class Map implements Map2D, Serializable {
     }
 
     @Override
-    public void addMap2D(Map2D p) {
+    public void addMap2D(Map2D p) {//vector adddtion like
         if (this.sameDimensions(p)) {
             for (int r = 0; r < p.getHeight(); r++) {
                 for (int c = 0; c < p.getWidth(); c++) {
@@ -178,7 +178,7 @@ public class Map implements Map2D, Serializable {
     }
 
     @Override
-    public void mul(double scalar) {
+    public void mul(double scalar) {//scalar * matrix
         for (int r = 0; r < this.getHeight(); r++) {
             for (int c = 0; c < this.getWidth(); c++) {
                 this.setPixel(c, r, (int) (this.getPixel(c, r) * scalar));
@@ -187,7 +187,7 @@ public class Map implements Map2D, Serializable {
     }
 
     @Override
-    public void rescale(double sx, double sy) {
+    public void rescale(double sx, double sy) { // rescaling the matrix to new proportion without losing the image context
         if(sx<=0 && sy<=0){throw new RuntimeException("sx or sy smaller than 0");}
         int new_h = (int) (this.getHeight() * sy), new_w = (int) (this.getWidth() * sx);
         int[][] re_map = new int[new_h][new_w];
@@ -202,7 +202,7 @@ public class Map implements Map2D, Serializable {
     }
 
     @Override
-    public void drawCircle(Pixel2D center, double rad, int color) {
+    public void drawCircle(Pixel2D center, double rad, int color) {// drawing circle by checking if the  pixel is inside him
         if (rad <= 0) {
             throw new IllegalArgumentException("rad must be bigger than 0");
         }
@@ -219,7 +219,7 @@ public class Map implements Map2D, Serializable {
     }
 
     @Override
-    public void drawLine(Pixel2D p1, Pixel2D p2, int color) {
+    public void drawLine(Pixel2D p1, Pixel2D p2, int color) {// drawing line between two points in the matrix
         if (!isInside(p1) || !isInside(p2)) return;
         if (p1.equals(p2)) {
             setPixel(p1.getX(), p1.getY(), color);
@@ -262,7 +262,7 @@ public class Map implements Map2D, Serializable {
     }
 
     @Override
-    public void drawRect(Pixel2D p1, Pixel2D p2, int color) {
+    public void drawRect(Pixel2D p1, Pixel2D p2, int color) {//
         int x_start = Math.min(p1.getX(), p2.getX()), x_end = Math.max(p1.getX(), p2.getX());
         int y_start = Math.min(p1.getY(), p2.getY()), y_end = Math.max(p1.getY(), p2.getY());
         for (int r = y_start; r <= y_end; r++) {
@@ -297,23 +297,21 @@ public class Map implements Map2D, Serializable {
      * Fills this map with the new color (new_v) starting from p.
      * https://en.wikipedia.org/wiki/Flood_fill
      */
-    public int fill(Pixel2D xy, int new_v, boolean cyclic) {
-        this.counter = 0;
+    public int fill(Pixel2D xy, int new_v, boolean cyclic) {//flood fill algorithm
         if(!(this.isInside(xy))) {throw new RuntimeException("xy out of bounds");}
         int color = this.getPixel(xy);
         if(color==new_v){return 0;}
         int r=this.getHeight(), c=this.getWidth();
 
         int[][] dirct={{1,0},{-1,0},{0,1},{0,-1}};
-        ArrayDeque<Index2D> q = new ArrayDeque<>();
-        q.add((Index2D) xy);
+        ArrayDeque<Index2D> q = new ArrayDeque<>();//a queue
+        q.add((Index2D) xy);// adding thh starting point
 
         while(!q.isEmpty())
         {
             Index2D curr= q.removeFirst();
-//            this.setPixel(curr,new_v);
-//            counter++;
-            for(int[] d: dirct){
+
+            for(int[] d: dirct){// all four side neighbors
                 int nx=curr.getX()+d[0],ny=curr.getY()+d[1];
                 Index2D n_curr= new Index2D(nx,ny);
                 if(cyclic){
@@ -322,11 +320,11 @@ public class Map implements Map2D, Serializable {
                     n_curr.change(nx,ny);
                 }
                 else {
-                    if (!this.isInside(n_curr)) {
+                    if (!this.isInside(n_curr)) {// if not cyclic: need to ignore out of bound neighbors
                         continue;
                     }
                 }
-                if (this.getPixel(n_curr) == color)
+                if (this.getPixel(n_curr) == color)//if its from the cluster
                 {
                     this.setPixel(n_curr,new_v);
                     q.add(n_curr);
@@ -334,10 +332,6 @@ public class Map implements Map2D, Serializable {
                 }
             }
         }
-
-
-
-
         return this.counter;
     }
 
@@ -357,25 +351,25 @@ public class Map implements Map2D, Serializable {
         Pixel2D[][] parents= new Pixel2D[r][c];
         boolean[][] visited= new boolean[r][c];
         int[][] dirct={{1,0},{-1,0},{0,1},{0,-1}};
-        ArrayDeque<Index2D> q = new ArrayDeque<>();
+        ArrayDeque<Index2D> q = new ArrayDeque<>();//a queue for BFS
         boolean found=false;
         q.add(new Index2D(p1));
         visited[p1.getY()][p1.getX()]=true;
-        parents[p1.getY()][p1.getX()]=null;//start point don't have someone before it.
+        parents[p1.getY()][p1.getX()]=null;//starting point don't have someone before it.
 
         while(!q.isEmpty())
         {
-            Index2D curr= q.removeFirst();
+            Index2D curr= q.removeFirst();//removing the head of the queue
             if(curr.equals(p2))
             {
              found=true;
              break;
             }
 
-            for(int[] d: dirct){
+            for(int[] d: dirct){// all four side neighbors
                 int nx=curr.getX()+d[0],ny=curr.getY()+d[1];
                 Index2D n_curr= new Index2D(nx,ny);
-                if(cyclic){
+                if(cyclic){//pacman behavior - from one side of screen to the other
                     if(nx==c){nx=0;} else if (nx==-1) {nx=c-1;}
                     if(ny==r){ny=0;} else if (ny==-1) {ny=r-1;}
                     n_curr.change(nx,ny);
@@ -387,9 +381,9 @@ public class Map implements Map2D, Serializable {
                         continue;
                     }
                 }
-                if(!visited[ny][nx] && this.getPixel(n_curr)!=obsColor){
-                    visited[ny][nx]=true;
-                    parents[ny][nx]=curr;
+                if(!visited[ny][nx] && this.getPixel(n_curr)!=obsColor){//if we haven't visited yet and it's not an obstacle
+                    visited[ny][nx]=true;//mark as visited
+                    parents[ny][nx]=curr;//
                     q.add(n_curr);
                 }
             }
@@ -398,7 +392,7 @@ public class Map implements Map2D, Serializable {
 
         ArrayList<Index2D> paths= new ArrayList<>();
         Index2D current= new Index2D(p2);
-        while(!current.equals(p1)){
+        while(!current.equals(p1)){//this part is about reversing from the end back to the start for creating the shortest path
             paths.add(current);
             current= new Index2D(parents[current.getY()][current.getX()]);
         }
@@ -410,14 +404,15 @@ public class Map implements Map2D, Serializable {
 
     @Override
     public Map2D allDistance(Pixel2D start, int obsColor, boolean cyclic) {
+        // works on the flood fill idea- instead of coloring with one color it's add 1 for each distance farther
         Map ans =  new Map(this.getMap());
-        ans.paddMap2D(obsColor);
+        ans.paddMap2D(obsColor);// change all none obstcales to -1 so we will know in the end where we haven't visited (can't reach)
         if(!(this.isInside(start))) {throw new RuntimeException("start point out of bounds");}
         int r=ans.getHeight(), c=ans.getWidth();
         int[][] dirct={{1,0},{-1,0},{0,1},{0,-1}};
         ArrayDeque<Index2D> q = new ArrayDeque<>();
         q.add((Index2D) start);
-        ans.setPixel(start,0);
+        ans.setPixel(start,0);// strat point need to be colored in 0
 
         while(!q.isEmpty())
         {
@@ -441,7 +436,7 @@ public class Map implements Map2D, Serializable {
                 if (ans.getPixel(n_curr) == -1)
                 {
                     q.add(n_curr);
-                    ans.setPixel(n_curr,curr_color+1);
+                    ans.setPixel(n_curr,curr_color+1);// color of where it came from +1
                 }
             }
 
